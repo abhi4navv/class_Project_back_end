@@ -41,6 +41,8 @@ opcode = {
     'sw': '101011',
     'sll': '000000', 
     'j': '000010', 
+    'bne': '000101',
+    'beq': '000100'
 }
 
 
@@ -135,7 +137,42 @@ class Converter:
                             ret_data['result'] = 'error'
                             ret_data['value'] = 'Length of binary must be 32'
                             ret_data['type'] = ''
+                elif op_bin in ['000010', '000101', '000100']:
+                    fun_code = [k for k,v in opcode.items() if v == '000010']
+                    
+                    if op_bin == '000010':
+                        
+                        if len(fun_code) > 0:
+                            ret_data['result'] = 'success'
+                            ret_data['value'] = f'{fun_code[0]}, Loop'
+                            ret_data['type'] = 'Integer Type'
+                        else:
+                            ret_data['result'] = 'error'
+                            ret_data['value'] = 'Invalid Data'
+                            ret_data['type'] = ''
+                    else:
+                        if len(fun_code) > 0:
+                            for k, v in registerdict.items():  # for name, age in dictionary.iteritems():  (for Python 2.x)
+                                if v == bin_line[6:11]:
+                                    r1 = k
+                                elif v == bin_line[11:16]:
+                                    r2 = k
+                        
+                                else:
+                                    continue
+                            r3 = 'Loop'
 
+                            if fun_code != "" and r1 != "" and r2 != "" and r3 != "":
+                                print('tt')
+                                ret_data['result'] = 'success'
+                                ret_data['value'] = f'{fun_code[0]}, {r2}, {r1}, {r3}'
+                                                 
+                                ret_data['type'] = 'Integer Type'
+                        else:
+                            ret_data['result'] = 'error'
+                            ret_data['value'] = 'Length of binary must be 32'
+                            ret_data['type'] = ''                       
+                        
 
                 else:
                     for ks, vs in funcode.items():
@@ -158,11 +195,14 @@ class Converter:
                             else:
                                 continue
                     if fun_code == 'sll':
-                        r3 = int(bin_line[-16:], 2)
-
+                        r3 = int(bin_line[21:27], 2)
+                        print(r3)
                     if fun_code != "" and r1 != "" and r2 != "" and r3 != "":
                         ret_data['result'] = 'success'
-                        ret_data['value'] = f'{fun_code}, {r3}, {r1}, {r2}'
+                        if fun_code == 'sll':
+                            ret_data['value'] = f'{fun_code}, {r2}, {r1}, {r3}'
+                        else:
+                            ret_data['value'] = f'{fun_code}, {r3}, {r1}, {r2}'
                         ret_data['type'] = 'Register Type'
                     else:
                         ret_data['result'] = 'error'
@@ -260,6 +300,7 @@ class Converter:
                         if ret_data['result'] != 'error':
 
                             ret_data['result'] = 'success'
+                        
                             ret_data['value'] = bin_equi + " " + str(format(int(split_code[-1]), '016b'))
                             if split_code[0] == 'sll':
                                 ret_data['type'] = 'Register Type'
