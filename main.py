@@ -107,7 +107,7 @@ class Converter:
                 r1 = ""
                 r2 = ""
                 r3 = ""
-                if op_bin in ['001000', '001001', '001100', '000100', '000101', '100011', '101011']:
+                if op_bin in ['001000', '001001', '001100', '000100', '100011', '101011']:
 
                     for k, v in opcode.items():
                         if op_bin ==v:
@@ -138,9 +138,10 @@ class Converter:
                             ret_data['value'] = 'Length of binary must be 32'
                             ret_data['type'] = ''
                 elif op_bin in ['000010', '000101', '000100']:
-                    fun_code = [k for k,v in opcode.items() if v == '000010']
+                    fun_code = [k for k,v in opcode.items() if v == op_bin]
                     
                     if op_bin == '000010':
+                       
                         
                         if len(fun_code) > 0:
                             ret_data['result'] = 'success'
